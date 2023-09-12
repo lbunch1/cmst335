@@ -1,127 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Dog Year's Calculator</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-      html {
-        background-color: #121212;
+
+<head>
+  <title>Dog Year's Calculator</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    html {
+      background-color: #121212;
+    }
+
+    body {
+      display: flex;
+      height: 90vh;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #eee;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      background-color: #212121;
+      padding: 2.3rem;
+      border: 4px solid #999;
+      border-radius: 14px;
+    }
+
+    button {
+      border: 2px solid #777;
+      background-color: #313131;
+      color: #eee;
+      border-radius: 8px;
+      padding: .5rem;
+      font-size: 1.3rem;
+    }
+
+    button:hover {
+      background-color: #efefef;
+      color: #212121;
+    }
+
+    label {
+      font-size: 1.3rem;
+      text-align: center;
+    }
+
+    input {
+      font-size: 1.5rem;
+      text-align: center;
+      width: 4em;
+      padding: .2rem;
+      border-radius: 8px;
+    }
+
+    #human-years {
+      width: 3em
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Dog Year's Calculator</h1>
+
+  <form>
+    <label>
+      Years in human years:<br />
+      <input type="text" pattern="\d*" maxlength="2" id="human-years" name="human-years" placeholder="00"
+        onclick="clearInput()"></input>
+    </label>
+    <button type="button" onclick="calcDogYears()">Calculate</button>
+    <label>
+      Years in dog years:<br />
+      <input type="text" id="dog-years" name="dog-years" readonly></input>
+    </label>
+    <label>
+      Years in dog years (alternate method):<br />
+      <input type="text" id="dog-years2" name="dog-years2" readonly></input>
+    </label>
+  </form>
+
+  <script>
+    "use strict";
+
+    function clearInput() {
+      document.getElementById("human-years").value = "";
+      document.getElementById("dog-years").value = "";
+    }
+
+    function dogYearsOne(input) {
+      let years = (Math.log(input) * 16 + 31).toFixed(2);
+      return years
+    }
+
+    function dogYearsTwo(input) {
+      let x = Math.floor(input);
+      let years
+      switch (x) {
+        case 1:
+          years = 15;
+          break
+        case 2:
+          years = 24;
+          break
+        default:
+          years = 24 + (x - 2) * 7;
+      }
+      return years
+    }
+
+    function calcDogYears() {
+
+      let humanYears = +document.getElementById("human-years").value;
+
+      if (humanYears !== null && humanYears !== 0) {
+        document.getElementById("dog-years").value = dogYearsOne(humanYears);
+        document.getElementById("dog-years2").value = dogYearsTwo(humanYears);
       }
 
-      body {
-        display: flex;
-        height: 90vh;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        color: #eee;
-      }
+    }
 
-      form {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1.5rem;
-        background-color: #212121;
-        padding: 2.3rem;
-        border: 4px solid #999;
-        border-radius: 14px;
-      }
+    window.addEventListener("keydown", function (e) {
+      (e.code === "Enter") && calcDogYears();
+    })
 
-      button {
-        border: 2px solid #777;
-        background-color: #313131;
-        color: #eee;
-        border-radius: 8px;
-        padding: .5rem;
-        font-size: 1.3rem;
-      }
-      button:hover {
-        background-color: #efefef;
-        color: #212121;
-      }
+  </script>
 
-      label {
-        font-size: 1.3rem;
-        text-align: center;
-      }
+</body>
 
-      input {
-        font-size: 1.5rem;
-        text-align: center;
-        width: 4em;
-        padding: .2rem;
-        border-radius: 8px;
-      }
-
-      #human-years {
-        width: 3em
-      }
-
-    </style>
-  </head>
-  <body>
-  
-    <h1>Dog Year's Calculator</h1>
-    
-    <form>
-      <label>
-        Years in human years:<br />
-        <input type="text" pattern="\d*" maxlength="2" id="human-years" name="human-years" placeholder="00" onclick="clearInput()"></input>
-      </label>
-      <button type="button" onclick="calcDogYears()">Calculate</button>
-      <label>
-        Years in dog years:<br />
-        <input type="text" id="dog-years" name="dog-years" readonly></input>
-      </label>
-      <label>
-        Years in dog years (alternate method):<br />
-        <input type="text" id="dog-years2" name="dog-years2" readonly></input>
-      </label>
-    </form>
-
-    <script>
-      "use strict";
-
-      function clearInput() {
-        document.getElementById("human-years").value = "";
-        document.getElementById("dog-years").value = "";
-      }
-
-      function dogYearsSwitch(input) {
-        let x = Math.floor(input);
-        let years
-        switch (x) {
-          case 1:
-            years = 15;
-            break
-          case 2:
-            years = 24;
-            break
-          default: 
-            years = 24 + (x-2) * 7;
-        }
-        return years
-      }
-
-      function calcDogYears() {
-
-        let humanYears = +document.getElementById("human-years").value;
-
-        if (humanYears !== null && humanYears !== 0) {
-          let dogYears = (Math.log(humanYears) * 16 + 31).toFixed(2);
-          document.getElementById("dog-years").value = dogYears;
-          document.getElementById("dog-years2").value = dogYearsSwitch(humanYears);
-        }
-
-      }
-
-      window.addEventListener("keydown", function(e) {
-        (e.code === "Enter") && calcDogYears();
-        })
-
-    </script>
-
-  </body>
 </html>
