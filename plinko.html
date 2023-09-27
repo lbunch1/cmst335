@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Plinko</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background-color: #111;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"
+    integrity="sha512-bcfltY+lNLlNxz38yBBm/HLaUB1gTV6I0e+fahbF9pS6roIdzUytozWdnFV8ZnM6cSAG5EbmO0ag0a/fLZSG4Q=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body>
+  <script>
+
+    let pins = [];
+    let marbles = [];
+
+    let gameOver = false;
+    let score = 0;
+    let calculated = false;
+
+    const GRAVITY = 10;
+
+    function setup() {
+      createCanvas(600, 800);
+
+      // Generate Pin Layout
+      for (let i = 0; i < 6; i++) {
+        for (let j = 0; j < 4; j++) {
+          let x;
+          if (i % 2 === 0) {
+            x = j * 142 + 80;
+          } else if (j === 0) {
+            continue;
+          } else {
+            x = j * 138 + 40;
+          }
+          let y = i * 120 + 100;
+          let r = 50;
+          pins.push(new Pin(x, y, r));
+        }
+      }
+    }
+
+    function draw() {
+      background(220);
+
+      //instructions
+      fill(120)
+      noStroke()
+      textSize(24)
+      text(`Aim with the mouse \nand click to drop a marble.`, 10, 25)
+      textSize(32)
+      text(('Marbles: ' + (3 - marbles.length)), 420, 40)
+
+      // Draw Numbers
+      noStroke();
+      fill(90, 100, 200);
+      textSize(64);
+      text("5", 30, 790);
+      text("10", 115, 790);
+      text("20", 215, 790);
+      text("20", 315, 790);
+      text("10", 415, 790);
+      text("5", 530, 790);
+
+      //Draw pins
+      pins.forEach((pin) => pin.draw());
+
+      //draw and animate each marble
+      marbles.forEach((marble) => {
+        marble.draw();
+        marble.move();
+      });
+
+      // Draw point markers
+      for (let i = 0; i < 5; i++) {
+        noStroke();
+        fill(90, 100, 200);
+        rect(i * 100 + 95, 740, 10, 60);
+      }
+
+      // Draw marble location indicator
+      noStroke();
+      fill(0, 180, 0, 100);
+      ellipseMode(CENTER);
+      ellipse(mouseX, 0, 40);
+
+      // Display End Game
+      endGame();
+    }
+
+    function mousePressed() {
+      //add new marbles on mouse click if gameOver condition is false
+      if (!gameOver) {
+        marbles.push(new Marble());
+      }
+
+      //Replay button click zone while gameOver condition is met
+      if (
+        gameOver &&
+        mouseX > 200 &&
+        mouseX < 400 &&
+        mouseY > 500 &&
+        mouseY < 580
+      ) {
+        restart();
+      }
+    }
+
+
+    //endGame function runs when the last marble is dropped and checks when the last marble hits the bottom, the prompt shows with the calculated score and an option to replay.
+    function endGame() {
+      // prevent extra marbles from being added
+      if (marbles.length === 3) {
+        gameOver = true;
+      }
+
+      if (gameOver && marbles[2].y > 720) {
+        stroke(0);
+        strokeWeight(4);
+        fill("yellow");
+        rect(20, 200, 560, 400);
+
+        fill(0);
+        textSize(120);
+        text("Score:", 100, 325);
+
+        if (!calculated) {
+          score = calculateScore();
+          calculated = true;
+        }
+
+        text(score, 220, 440);
+
+        fill("red");
+        rect(200, 500, 200, 80);
+        fill(255);
+        noStroke();
+        textSize(52);
+        text("Replay", 220, 560);
+      }
+    }
+
+    //Resets the game state variables
+    function restart() {
+      marbles = [];
+      gameOver = false;
+      score = 0;
+      calculated = false
+    }
+    // calculates the score based on the x position of the marbles when end of game parameters are met
+    function calculateScore() {
+      let tempScore = 0;
+      marbles.forEach((marble) => {
+        if (marble.x < 100 || marble.x > 500) {
+          tempScore += 5;
+        } else if (marble.x < 200 || marble.x > 400) {
+          tempScore += 10;
+        } else if (marble.x > 200 && marble.x < 400) {
+          tempScore += 20;
+        }
+      });
+      return tempScore;
+    }
+
+    class Pin {
+      constructor(x, y, r) {
+        this.x = x;
+        this.y = y;
+        this.r = r;
+      }
+
+      draw() {
+        stroke(0);
+        strokeWeight(4);
+        fill("red");
+        ellipseMode(CENTER);
+        ellipse(this.x, this.y, this.r);
+      }
+    }
+
+    class Marble {
+      constructor() {
+        this.x = mouseX;
+        this.y = 0;
+        this.r = 40;
+        this.velocityX = 0;
+        this.velocityY = 0;
+      }
+
+      draw() {
+        stroke(0);
+        strokeWeight(2);
+        fill(190);
+        ellipseMode(CENTER);
+        ellipse(this.x, this.y, this.r);
+      }
+
+      move() {
+
+        //This will move the marble downward as long as the marble is not at the bottom of the screen
+        if (this.y >= height - this.r / 2) {
+          this.y = height - this.r / 2;
+        } else {
+          this.y += GRAVITY + this.velocityY;
+        }
+
+        // This prevents a ball from getting stuck on top of a pin
+        if (this.velocityX === 0 && this.y < 740) {
+          this.velocityX += random(-0.1, 0.1);
+        }
+
+        //This moves the ball left or right depending on the velocityX value
+        this.x += this.velocityX;
+
+        //Reduces the x and y velocities fractionally with each iteration
+        if (Math.abs(this.velocityX) > 0) {
+          this.velocityX = this.velocityX * 0.94;
+        }
+
+        if (Math.abs(this.velocityY) > 0) {
+          this.velocityY = this.velocityY * 0.9;
+        }
+
+
+        //bounces the marble off the walls
+        if (this.x <= 0 || this.x >= width) {
+          this.velocityX = this.velocityX * -1;
+        }
+
+        //collision detection and bounce for each pin
+        pins.forEach((pin) => {
+          if (dist(pin.x, pin.y, this.x, this.y) <= pin.r / 2 + this.r / 2) {
+            this.velocityX = (this.x - pin.x) * 0.5;
+            this.velocityY = (this.y - pin.y) * 0.5;
+          }
+        });
+
+
+      }
+    }
+
+  </script>
+</body>
+
+</html>
