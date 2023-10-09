@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="style.css" rel="stylesheet">
+  <script src="game.js" defer></script>
+</head>
+
+<body>
+  <div>
+    <form>
+      <label>
+        Choose your class:
+        <select id="hero-class">
+          <option value="warrior">Warrior</option>
+          <option value="wizard">Wizard</option>
+        </select>
+      </label>
+      <br />
+      <label>
+        Choose your hero's name:
+        <input id="hero-name" type="text" maxlength="12"></input>
+      </label>
+      <button type="button" onclick="createCharacter()">Create Character</submit>
+    </form>
+    <button id="battle" type="button" onclick="prepBattle()" disabled>Get Opponent</button>
+  </div>
+  <div class="battlefield">
+    <div class="player">
+      <p id="player-name"></p>
+      <p id="player-health"></p>
+    </div>
+    <div class="opponent">
+      <p id="mob-name"></p>
+      <p id="mob-health"></p>
+    </div>
+    <button id="attack" type="button" onclick="attack()" disabled>ATTACK!!</button>
+  </div>
+</body>
+
+</html>

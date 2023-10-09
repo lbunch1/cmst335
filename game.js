@@ -21,7 +21,7 @@ class Player extends Character {
 
   meleeAttack(target) {
     let damage = this.weapon ? (this.attack * multiplier() + this.weapon.atk) : this.attack * multiplier()
-    target.health -= damage - target.defense
+    target.health -= damage <= target.defense ? 0 : damage - target.defense
     console.log(`${this.name} attacks the ${target.name} and hits it for ${damage} hit points`)
   }
 }
@@ -49,7 +49,7 @@ class Mob extends Character {
   }
   meleeAttack(target) {
     let damage = this.attack * multiplier()
-    target.health -= damage - target.defense
+    target.health -= damage <= target.defense ? 0 : damage - target.defense
     console.log(`${this.name} attacks the ${target.name} and hits it for ${damage} hit points`)
   }
 }
@@ -66,28 +66,63 @@ class Item {
 }
 
 // prompt character creation, choose class and name
-let player = new Warrior("Logno")
-console.log("You have chosen to be a Warrior named " + player.name)
-
-// prompt to "adventure" which launches into battle with random mob
-let mob = new Mob("Field Spider", 1)
-console.log(`You are approached by a level ${mob.level} ${mob.name}`)
-
-// battle loop
-while (player.health > 0 && mob.health > 0) {
-  // player action
-  player.meleeAttack(mob)
-  console.log(mob.health)
-
-  mob.meleeAttack(player)
-  console.log(player.health)
-}
-player.health <= 0 ? console.log("You Lose") : console.log("You Win")
-
+let player
+let mob
 // function sign() {
 //   return Math.random() < 0.5 ? -1 : 1
 // }
 
 function multiplier() {
   return Math.round(Math.random() * 3)
+}
+
+function createCharacter() {
+  let name = document.getElementById("hero-name").value
+  switch (document.getElementById("hero-class").value) {
+    case "warrior":
+      player = new Warrior(name)
+      break
+    case "wizard":
+      player = new Wizard(name)
+      break
+  }
+  document.getElementById("player-name").innerHTML = player.name
+  document.getElementById("player-health").innerHTML = player.health
+  console.log("Character created")
+  document.getElementById("battle").attributes.removeNamedItem("disabled")
+}
+
+function prepBattle() {
+  // prompt to "adventure" which launches into battle with random mob
+  mob = new Mob("Field Spider", 1)
+  // console.log(`You are approached by a level ${mob.level} ${mob.name}`)
+  document.getElementById("mob-name").innerHTML = mob.name
+  let mobHealth = document.getElementById("mob-health")
+  mobHealth.innerHTML = mob.health
+  document.getElementById("attack").attributes.removeNamedItem("disabled")
+  document.getElementById("battle").setAttribute("disabled", true)
+}
+
+function attack() {
+  let mobHealth = document.getElementById("mob-health")
+  let playerHealth = document.getElementById("player-health")
+
+  // battle loop
+  if (player.health > 0 && mob.health > 0) {
+    // player action
+    player.meleeAttack(mob)
+    mobHealth.innerHTML = mob.health
+
+    mob.meleeAttack(player)
+    playerHealth.innerHTML = player.health
+  }
+  if (player.health <= 0) {
+    //you lose
+    document.getElementById("attack").setAttribute("disabled", true)
+  } else if (mob.health <= 0) {
+    document.getElementById("battle").attributes.removeNamedItem("disabled")
+    document.getElementById("attack").setAttribute("disabled", true)
+    //you win
+  }
+
 }

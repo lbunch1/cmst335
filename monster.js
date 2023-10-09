@@ -17,11 +17,4 @@ class Monster {
 let blob = new Monster('The Blob', "red", undefined, undefined, "BLobooeirjgjbbblbleebrbee");
 console.log("This monster is called " + blob.name);
 console.log(blob.name + " says " + blob.getSound());
-/*
-Monsters we thought of in class...
-Nessie, Mothman, Bigfoot, chupacabra
-Grim Reaper, Zombie, Dracula, Wolfman,
-Frankenstein, Mummy, Gill Man,
-Invisible Man, Alien, Godzilla
-King Kong, Ghost, Scarecrow, Clown
-*/
+
