@@ -9,6 +9,11 @@ class Character {
     this.weapon
     this.armor
   }
+  meleeAttack(target) {
+    let damage = this.weapon ? (this.attack * multiplier() + this.weapon.atk) : this.attack * multiplier()
+    target.health -= damage <= target.defense ? 0 : damage - target.defense
+    console.log(`${this.name} attacks the ${target.name} and hits it for ${damage} hit points`)
+  }
 }
 
 class Player extends Character {
@@ -19,11 +24,6 @@ class Player extends Character {
     this.skills = []
   }
 
-  meleeAttack(target) {
-    let damage = this.weapon ? (this.attack * multiplier() + this.weapon.atk) : this.attack * multiplier()
-    target.health -= damage <= target.defense ? 0 : damage - target.defense
-    console.log(`${this.name} attacks the ${target.name} and hits it for ${damage} hit points`)
-  }
 }
 
 class Warrior extends Player {
@@ -47,11 +47,7 @@ class Mob extends Character {
     super(name, level + 10, 10, level + 10, level * 10 + 100)
     this.level = level
   }
-  meleeAttack(target) {
-    let damage = this.attack * multiplier()
-    target.health -= damage <= target.defense ? 0 : damage - target.defense
-    console.log(`${this.name} attacks the ${target.name} and hits it for ${damage} hit points`)
-  }
+
 }
 
 class Item {
@@ -89,7 +85,7 @@ function createCharacter() {
   document.getElementById("player-name").innerHTML = player.name
   document.getElementById("player-health").innerHTML = player.health
   console.log("Character created")
-  document.getElementById("battle").attributes.removeNamedItem("disabled")
+  document.getElementById("battle").disabled = false
 }
 
 function prepBattle() {
@@ -99,30 +95,42 @@ function prepBattle() {
   document.getElementById("mob-name").innerHTML = mob.name
   let mobHealth = document.getElementById("mob-health")
   mobHealth.innerHTML = mob.health
-  document.getElementById("attack").attributes.removeNamedItem("disabled")
-  document.getElementById("battle").setAttribute("disabled", true)
+  document.getElementById("attack").disabled = false
+  document.getElementById("game-stat").innerText = ""
+  document.getElementById("battle").disabled = true
 }
 
 function attack() {
   let mobHealth = document.getElementById("mob-health")
   let playerHealth = document.getElementById("player-health")
+  checkStatus()
 
   // battle loop
   if (player.health > 0 && mob.health > 0) {
     // player action
     player.meleeAttack(mob)
     mobHealth.innerHTML = mob.health
-
-    mob.meleeAttack(player)
-    playerHealth.innerHTML = player.health
-  }
-  if (player.health <= 0) {
-    //you lose
-    document.getElementById("attack").setAttribute("disabled", true)
-  } else if (mob.health <= 0) {
-    document.getElementById("battle").attributes.removeNamedItem("disabled")
-    document.getElementById("attack").setAttribute("disabled", true)
+    document.getElementById("attack").disabled = true
+    document.getElementById("attack").innerText = "Opponent is attacking..."
     //you win
-  }
+    checkStatus()
 
+    setTimeout(() => {
+      mob.meleeAttack(player)
+      playerHealth.innerHTML = player.health
+      document.getElementById("attack").disabled = false
+      document.getElementById("attack").innerText = "ATTACK!!"
+      checkStatus()
+    }, 1000)
+  }
+}
+function checkStatus() {
+  if (player.health <= 0) {
+    document.getElementById("game-stat").innerText = "You have been killed by the " + mob.name
+    document.getElementById("attack").disabled = true
+  } else if (mob.health <= 0) {
+    document.getElementById("battle").disabled = false
+    document.getElementById("attack").disabled = true
+    document.getElementById("game-stat").innerText = "You have defeated the " + mob.name
+  }
 }

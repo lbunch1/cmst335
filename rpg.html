@@ -6,6 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="style.css" rel="stylesheet">
+  <link href="rpg.css" rel="stylesheet">
   <script src="game.js" defer></script>
 </head>
 
@@ -26,19 +27,23 @@
       </label>
       <button type="button" onclick="createCharacter()">Create Character</submit>
     </form>
-    <button id="battle" type="button" onclick="prepBattle()" disabled>Get Opponent</button>
   </div>
-  <div class="battlefield">
-    <div class="player">
-      <p id="player-name"></p>
-      <p id="player-health"></p>
+  <div class="flex-wrap">
+    <button id="battle" class="game-btn" type="button" onclick="prepBattle()" disabled>Get Opponent</button>
+    <div class="battlefield">
+      <div class="char player">
+        <p id="player-name"></p>
+        <p id="player-health"></p>
+      </div>
+      <div class="char opponent">
+        <p id="mob-name"></p>
+        <p id="mob-health"></p>
+      </div>
     </div>
-    <div class="opponent">
-      <p id="mob-name"></p>
-      <p id="mob-health"></p>
-    </div>
-    <button id="attack" type="button" onclick="attack()" disabled>ATTACK!!</button>
+    <button id="attack" class="game-btn" type="button" onclick="attack()" disabled>ATTACK!!</button>
+    <h3 id="game-stat"></h3>
   </div>
+
 </body>
 
 </html>
