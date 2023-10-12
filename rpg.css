@@ -46,3 +46,12 @@ button:disabled {
 button:hover {
   background-color: #4d4d4d;
 }
+
+#activity {
+  background-color: #313131;
+  color: white;
+  height: 7rem;
+  width: 40em;
+  overflow-y: scroll;
+  padding: .5rem;
+}

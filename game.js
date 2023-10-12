@@ -10,9 +10,17 @@ class Character {
     this.armor
   }
   meleeAttack(target) {
-    let damage = this.weapon ? (this.attack * multiplier() + this.weapon.atk) : this.attack * multiplier()
-    target.health -= damage <= target.defense ? 0 : damage - target.defense
-    console.log(`${this.name} attacks the ${target.name} and hits it for ${damage} hit points`)
+    let damagePotenial = this.weapon ? (this.attack * multiplier() + this.weapon.atk) : this.attack * multiplier()
+    let damage = damagePotenial <= target.defense ? 0 : damagePotenial - target.defense
+
+    target.health -= damage
+    let timestamp = (new Date).getUTCHours() + ":" + (new Date).getUTCMinutes().toString().padStart(2, "0") + ":" + (new Date).getUTCSeconds().toString().padStart(2, "0")
+
+    if (damage === 0) {
+      activity.innerHTML = `<p>${timestamp}: ${this.name} missed.` + activity.innerHTML
+    } else {
+      activity.innerHTML = `<p>${timestamp}: ${this.name} hits ${target.name} for ${damage} points.` + activity.innerHTML
+    }
   }
 }
 
@@ -64,6 +72,15 @@ class Item {
 // prompt character creation, choose class and name
 let player
 let mob
+let activity = document.getElementById("activity")
+let mobList = [
+  "Field Spider",
+  "Green Snake",
+  "Zombie",
+  "Warewolf",
+  "Slime",
+  "Rabid Dog"
+]
 // function sign() {
 //   return Math.random() < 0.5 ? -1 : 1
 // }
@@ -90,7 +107,8 @@ function createCharacter() {
 
 function prepBattle() {
   // prompt to "adventure" which launches into battle with random mob
-  mob = new Mob("Field Spider", 1)
+  let mobName = mobList[Math.floor(Math.random() * mobList.length)]
+  mob = new Mob(mobName, 1)
   // console.log(`You are approached by a level ${mob.level} ${mob.name}`)
   document.getElementById("mob-name").innerHTML = mob.name
   let mobHealth = document.getElementById("mob-health")
@@ -113,24 +131,25 @@ function attack() {
     document.getElementById("attack").disabled = true
     document.getElementById("attack").innerText = "Opponent is attacking..."
     //you win
-    checkStatus()
-
-    setTimeout(() => {
-      mob.meleeAttack(player)
-      playerHealth.innerHTML = player.health
-      document.getElementById("attack").disabled = false
-      document.getElementById("attack").innerText = "ATTACK!!"
-      checkStatus()
-    }, 1000)
+    checkStatus() ? null : (
+      setTimeout(() => {
+        mob.meleeAttack(player)
+        playerHealth.innerHTML = player.health
+        document.getElementById("attack").disabled = false
+        document.getElementById("attack").innerText = "ATTACK!!"
+        checkStatus()
+      }, 1000))
   }
 }
 function checkStatus() {
   if (player.health <= 0) {
-    document.getElementById("game-stat").innerText = "You have been killed by the " + mob.name
+    activity.innerHTML = `<p>You have been defeated by ${mob.name}.</p>` + activity.innerHTML
     document.getElementById("attack").disabled = true
+    return 0
   } else if (mob.health <= 0) {
     document.getElementById("battle").disabled = false
     document.getElementById("attack").disabled = true
-    document.getElementById("game-stat").innerText = "You have defeated the " + mob.name
+    activity.innerHTML = `<p>You have defeated ${mob.name}!!</p>` + activity.innerHTML
+    return 1
   }
 }
