@@ -4,7 +4,7 @@ function makeStory() {
   // Create arrays containing the input values
   let noun = [...document.querySelectorAll(".noun")].map(e => e.value)
   let adjective = [...document.querySelectorAll(".adjective")].map(e => e.value)
-  let verb = [...document.querySelectorAll(".noun")].map(e => e.value)
+  let verb = [...document.querySelectorAll(".verb")].map(e => e.value)
 
   // validate that all fields have been filled out, stop the function if fields are left blank. Alert the user with a snarky message.
   if (
@@ -26,7 +26,6 @@ function makeStory() {
 
   // Insert the story block into the "mad" element replacing the form
   document.getElementById("mad").innerHTML = storyContent
-
 }
 
 // simple function to add the bold text to the user input words
