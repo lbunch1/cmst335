@@ -8,7 +8,13 @@ let cards = [
   { value: "c" },
   { value: "c" },
   { value: "d" },
-  { value: "d" }
+  { value: "d" },
+  { value: "e" },
+  { value: "e" },
+  { value: "f" },
+  { value: "f" },
+  { value: "g" },
+  { value: "g" }
 ]
 
 let turned = 0
