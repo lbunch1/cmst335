@@ -32,7 +32,7 @@ for (let i = 0; i < cardCount; i++) {
 }
 
 board.forEach((card, i) => {
-  document.getElementById("game-board").innerHTML += `<div class="card" id=${i}>0</card>`
+  document.getElementById("game-board").innerHTML += `<div class="card" id=${i}>0</div>`
 })
 
 document.querySelectorAll(".card").forEach((card) => {
