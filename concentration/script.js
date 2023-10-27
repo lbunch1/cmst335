@@ -12,6 +12,7 @@ function createBoard(num) {
   timer.style.display = "block"
   timer.innerText = time
   document.getElementById("remaining").style.display = "block"
+  document.getElementById("title").style.display = "none"
 
 
   let cards = []
