@@ -113,7 +113,7 @@ background: linear-gradient(135deg, #2e812555 25%, transparent 25%) -10px 0/ 20p
   }
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 580px) {
   #game-board {
     gap: .2rem;
   }
