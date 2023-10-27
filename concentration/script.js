@@ -1,17 +1,39 @@
 const board = []
 let firstCard, secondCard, cardCount, remainingPairs, pairElement
 let turned = 0
+let time = 60
+
 const clickBlock = document.getElementById("blocker")
+const timer = document.getElementById("timer")
+
 
 function createBoard(num) {
   document.getElementById("game-board").innerHTML = ""
+  timer.style.display = "block"
+  timer.innerText = time
   document.getElementById("remaining").style.display = "block"
+
 
   let cards = []
   for (let i = 1; i <= num; i++) {
     cards.push({ value: i })
     cards.push({ value: i })
   }
+
+  setTimeout(() => {
+    let timeClock = setInterval(() => {
+      if (remainingPairs === 0) {
+        clearInterval(timeClock)
+      }
+      if (time === 0) {
+        clearInterval(timeClock)
+        loseGame()
+      } else {
+        time--
+        timer.innerText = time
+      }
+    }, 1000)
+  }, 3000)
 
   cardCount = cards.length
   remainingPairs = cardCount / 2
@@ -94,6 +116,7 @@ function checkMatch() {
       secondCard.element.classList.add("matched")
       remainingPairs--
       if (remainingPairs === 0) {
+        pairElement.innerText = remainingPairs
         clickBlock.style.visibility = "hidden"
         document.querySelector("body").innerHTML += '<button type="button" onclick="location.reload()">Play Again!</button>'
       }
@@ -106,7 +129,7 @@ function checkMatch() {
         unflipCard(flipped)
       })
       clickBlock.style.visibility = "hidden"
-    }, 700)
+    }, 500)
   }
 }
 
@@ -124,4 +147,9 @@ function unflipCard(card) {
     card.innerHTML = "&nbsp;"
   }, 500)
   card.classList.add("unflip")
+}
+
+function loseGame() {
+  clickBlock.style.display = "block"
+  document.getElementById("time-up").style.display = "flex"
 }
