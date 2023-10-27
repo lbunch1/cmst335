@@ -9,26 +9,94 @@ body {
   justify-content: center;
 }
 
-#game-board {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  max-width: 600px;
-}
-
-.card {
+button {
+  background-color: white;
   border: 2px solid black;
-  border-radius: 18px;
-  padding: 2rem 1.6rem;
-  font-size: 8rem;
+  border-radius: 12px;
+  padding: 1rem;
+  margin: .4rem;
+  color: black;
   cursor: pointer;
 }
 
+#blocker {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  visibility: hidden;
+  z-index: 99;
+}
+
+#game-board {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.4rem;
+  max-width: 780px;
+}
+
+.card-wrap {
+  display: flex;
+  justify-content: center;
+  width: 8rem;
+}
+
+.card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid black;
+  border-radius: 18px;
+  width: 100px;
+  height: 160px;
+  cursor: pointer;
+  background-color: #f6f18a;
+opacity: 0.8;
+background: linear-gradient(135deg, #2e812555 25%, transparent 25%) -10px 0/ 20px 20px, linear-gradient(225deg, #2e8125 25%, transparent 25%) -10px 0/ 20px 20px, linear-gradient(315deg, #2e812555 25%, transparent 25%) 0px 0/ 20px 20px, linear-gradient(45deg, #2e8125 25%, #f6f18a 25%) 0px 0/ 20px 20px;
+}
+
 .flipped {
-  background-color: black;
+  background: white;
   color: white;
+  animation: 1s flip;
+}
+
+.unflip {
+  animation: 1s unflip;
 }
 
 .matched {
-  background-color: darkgreen;
+  background: darkgreen;
+}
+
+@keyframes flip {
+  0% {
+background: linear-gradient(135deg, #2e812555 25%, transparent 25%) -10px 0/ 20px 20px, linear-gradient(225deg, #2e8125 25%, transparent 25%) -10px 0/ 20px 20px, linear-gradient(315deg, #2e812555 25%, transparent 25%) 0px 0/ 20px 20px, linear-gradient(45deg, #2e8125 25%, #f6f18a 25%) 0px 0/ 20px 20px;
+  }
+  49% {
+background: linear-gradient(135deg, #2e812555 25%, transparent 25%) -10px 0/ 20px 20px, linear-gradient(225deg, #2e8125 25%, transparent 25%) -10px 0/ 20px 20px, linear-gradient(315deg, #2e812555 25%, transparent 25%) 0px 0/ 20px 20px, linear-gradient(45deg, #2e8125 25%, #f6f18a 25%) 0px 0/ 20px 20px;
+  }
+  50% {
+    transform: scaleX(0);
+    background: white;
+  }
+  100% {
+  }
+}
+
+@keyframes unflip {
+  0% {
+    background: white;
+  }
+  49% {
+    background: white;
+  }
+  50% {
+    transform: scaleX(0);
+background: linear-gradient(135deg, #2e812555 25%, transparent 25%) -10px 0/ 20px 20px, linear-gradient(225deg, #2e8125 25%, transparent 25%) -10px 0/ 20px 20px, linear-gradient(315deg, #2e812555 25%, transparent 25%) 0px 0/ 20px 20px, linear-gradient(45deg, #2e8125 25%, #f6f18a 25%) 0px 0/ 20px 20px;
+  }
+  100% {
+  }
 }

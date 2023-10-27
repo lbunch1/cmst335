@@ -10,11 +10,16 @@
 </head>
 
 <body>
-  <h2>Remaining Pairs: <span id="pairs"></span></h2>
+  <h1>Remaining Pairs: <span id="pairs"></span></h1>
   <div id="game-board">
+    <h2>Choose difficulty:</h2>
+    <button type="button" onclick="createBoard(6)">Easy</button>
+    <button type="button" onclick="createBoard(8)">Medium</button>
+    <button type="button" onclick="createBoard(10)">Hard</button>
 
   </div>
 
+  <div id="blocker"></div>
 </body>
 
 </html>

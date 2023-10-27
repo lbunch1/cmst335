@@ -1,76 +1,87 @@
 const board = []
-
-let cards = [
-  { value: "a" },
-  { value: "a" },
-  { value: "b" },
-  { value: "b" },
-  { value: "c" },
-  { value: "c" },
-  { value: "d" },
-  { value: "d" },
-  { value: "e" },
-  { value: "e" },
-  { value: "f" },
-  { value: "f" },
-  { value: "g" },
-  { value: "g" }
-]
-
+let firstCard, secondCard, cardCount, remainingPairs, pairElement
 let turned = 0
+const clickBlock = document.getElementById("blocker")
 
-let cardCount = cards.length
-let remainingPairs = cardCount / 2
-const pairElement = document.getElementById("pairs")
-pairElement.innerText = remainingPairs
-let firstCard, secondCard
+function createBoard(num) {
+  document.getElementById("game-board").innerHTML = ""
+
+  let cards = []
+  for (let i = 1; i <= num; i++) {
+    cards.push({ value: i })
+    cards.push({ value: i })
+  }
+
+  cardCount = cards.length
+  remainingPairs = cardCount / 2
+  pairElement = document.getElementById("pairs")
+  pairElement.innerText = remainingPairs
 
 
-for (let i = 0; i < cardCount; i++) {
-  let splicer = Math.floor(Math.random() * (cards.length - 1))
-  board.push(cards.splice(splicer, 1)[0])
+
+  for (let i = 0; i < cardCount; i++) {
+    let splicer = Math.floor(Math.random() * (cards.length - 1))
+    board.push(cards.splice(splicer, 1)[0])
+  }
+
+
+  board.forEach((card, i) => {
+    document.getElementById("game-board").innerHTML += `<div class="card-wrap"><div class="card" id=${i}>&nbsp;</div></div>`
+  })
+
+  document.querySelectorAll(".card").forEach((card) => {
+    flipCard(card)
+  })
+
+  setTimeout(() => {
+    document.querySelectorAll(".flipped").forEach((card) => {
+      unflipCard(card)
+    })
+  }, 3000)
+
+  setTimeout(() => {
+    document.querySelectorAll(".card").forEach((card) => {
+      card.addEventListener("click", () => {
+        play(card)
+      })
+    })
+  }, 3000)
+
+  return pairElement
+
 }
 
-board.forEach((card, i) => {
-  document.getElementById("game-board").innerHTML += `<div class="card" id=${i}>0</div>`
-})
-
-document.querySelectorAll(".card").forEach((card) => {
-  card.addEventListener("click", () => {
-    play(card)
-  })
-})
-
 function play(card) {
-  if (remainingPairs === 0) {
+  if (
+    remainingPairs === 0 ||
+    card.classList.contains("matched")
+  ) {
     return
   }
   if (turned === 2) {
     document.querySelectorAll(".flipped").forEach((flipped) => {
-      flipped.classList.remove("flipped")
-      flipped.innerText = "0"
+      unflipCard(flipped)
     })
     turned = 0
   }
   if (turned === 0) {
-    card.classList.toggle("flipped")
-    card.innerText = board[card.getAttribute("id")].value
+    flipCard(card)
     turned++
     firstCard = { element: card, value: board[card.getAttribute("id")].value }
-  } else if (turned === 1)
+  } else if (turned === 1) {
     if (card.classList.contains("flipped")) {
-      card.classList.remove("flipped")
-      card.innerText = "0"
+      unflipCard(card)
       turned--
       firstCard = null
       secondCard = null
     } else {
-      card.classList.toggle("flipped")
-      card.innerText = board[card.getAttribute("id")].value
+      flipCard(card)
       secondCard = { element: card, value: board[card.getAttribute("id")].value }
       turned++
+      clickBlock.style.visibility = "visible"
+      setTimeout(checkMatch, 1000)
     }
-  checkMatch()
+  }
 }
 
 function checkMatch() {
@@ -81,9 +92,35 @@ function checkMatch() {
       secondCard.element.classList.remove("flipped")
       secondCard.element.classList.add("matched")
       remainingPairs--
+      if (remainingPairs === 0) {
+        clickBlock.style.visibility = "hidden"
+        document.querySelector("body").innerHTML += '<button type="button" onclick="location.reload()">Play Again!</button>'
+      }
       pairElement.innerText = remainingPairs
     }
     firstCard = null
     secondCard = null
+    setTimeout(() => {
+      document.querySelectorAll(".flipped").forEach((flipped) => {
+        unflipCard(flipped)
+      })
+      clickBlock.style.visibility = "hidden"
+    }, 700)
   }
+}
+
+function flipCard(card) {
+  card.classList.add("flipped")
+  setTimeout(() => {
+    card.innerHTML = `<img src="./img/${board[card.getAttribute("id")].value}.png" width="80" />`
+  }, 500)
+  card.classList.remove("unflip")
+}
+
+function unflipCard(card) {
+  card.classList.remove("flipped")
+  setTimeout(() => {
+    card.innerHTML = "&nbsp;"
+  }, 500)
+  card.classList.add("unflip")
 }
