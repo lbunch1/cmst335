@@ -19,6 +19,15 @@ button {
   cursor: pointer;
 }
 
+h1 {
+  font-size: 3rem;
+  padding: 2rem;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
 #blocker {
   position: fixed;
   top: 0;
@@ -37,10 +46,13 @@ button {
   max-width: 780px;
 }
 
+#remaining {
+  display: none;
+}
+
 .card-wrap {
   display: flex;
   justify-content: center;
-  width: 8rem;
 }
 
 .card {
@@ -98,5 +110,23 @@ background: linear-gradient(135deg, #2e812555 25%, transparent 25%) -10px 0/ 20p
 background: linear-gradient(135deg, #2e812555 25%, transparent 25%) -10px 0/ 20px 20px, linear-gradient(225deg, #2e8125 25%, transparent 25%) -10px 0/ 20px 20px, linear-gradient(315deg, #2e812555 25%, transparent 25%) 0px 0/ 20px 20px, linear-gradient(45deg, #2e8125 25%, #f6f18a 25%) 0px 0/ 20px 20px;
   }
   100% {
+  }
+}
+
+@media screen and (max-width: 400px) {
+  #game-board {
+    gap: .2rem;
+  }
+
+  .card {
+    padding: 0;
+    margin: 0;
+    width: 80px;
+    height: 90px;
+  }
+
+  .card-wrap {
+    padding: 0;
+    margin: 0;
   }
 }

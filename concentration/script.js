@@ -5,6 +5,7 @@ const clickBlock = document.getElementById("blocker")
 
 function createBoard(num) {
   document.getElementById("game-board").innerHTML = ""
+  document.getElementById("remaining").style.display = "block"
 
   let cards = []
   for (let i = 1; i <= num; i++) {
