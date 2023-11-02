@@ -109,6 +109,12 @@ background: linear-gradient(135deg, #2e812555 25%, transparent 25%) -10px 0/ 20p
   background: darkgreen;
 }
 
+.timeout {
+  position: relative;
+  animation-name: timeout;
+  animation-duration: 1s;
+}
+
 @keyframes flip {
   0% {
 background: linear-gradient(135deg, #2e812555 25%, transparent 25%) -10px 0/ 20px 20px, linear-gradient(225deg, #2e8125 25%, transparent 25%) -10px 0/ 20px 20px, linear-gradient(315deg, #2e812555 25%, transparent 25%) 0px 0/ 20px 20px, linear-gradient(45deg, #2e8125 25%, #f6f18a 25%) 0px 0/ 20px 20px;
@@ -136,6 +142,17 @@ background: linear-gradient(135deg, #2e812555 25%, transparent 25%) -10px 0/ 20p
 background: linear-gradient(135deg, #2e812555 25%, transparent 25%) -10px 0/ 20px 20px, linear-gradient(225deg, #2e8125 25%, transparent 25%) -10px 0/ 20px 20px, linear-gradient(315deg, #2e812555 25%, transparent 25%) 0px 0/ 20px 20px, linear-gradient(45deg, #2e8125 25%, #f6f18a 25%) 0px 0/ 20px 20px;
   }
   100% {
+  }
+}
+
+@keyframes timeout {
+  0% {
+    color: red;
+    transform:scale(2);
+  }
+  100% {
+    color: black;
+    transform:scale(1);
   }
 }
 

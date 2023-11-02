@@ -70,7 +70,11 @@ function createBoard(num) {
       }
       if (time > 0) {
         time--
-        timer.innerText = time
+        if (time < 11) {
+          timer.innerHTML = `<div class="timeout">${time}</div>`
+        } else {
+          timer.innerText = time
+        }
       }
       if (time === 0 && remainingPairs !== 0) {
         clearInterval(timeClock)
