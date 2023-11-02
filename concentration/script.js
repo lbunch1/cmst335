@@ -1,4 +1,3 @@
-
 /*
  _______  _______  ______   _______  _______         
 |   _   ||   _   ||   _  \ |   _   ||   _   | ______ 
@@ -27,6 +26,8 @@ logno.dev
 
 // GLOBAL VARIABLES
 const board = []
+const FLIPDELAY = 300
+const CHECKDELAY = 800
 let firstCard, secondCard, cardCount, remainingPairs
 let turned = 0
 let time = 60
@@ -62,18 +63,18 @@ function createBoard(num) {
   // Here we set the clock interval after a delay that aligns
   // with the initial reveal and subsequent flip of the cards.
   // The timer is cleared when the value of time reaches 0
-
   setTimeout(() => {
     let timeClock = setInterval(() => {
       if (remainingPairs === 0) {
         clearInterval(timeClock)
       }
-      if (time === 0) {
-        clearInterval(timeClock)
-        loseGame()
-      } else {
+      if (time > 0) {
         time--
         timer.innerText = time
+      }
+      if (time === 0 && remainingPairs !== 0) {
+        clearInterval(timeClock)
+        loseGame()
       }
     }, 1000)
   }, 3000)
@@ -169,7 +170,8 @@ function play(card) {
       // ensures that no other clicks interfere with the checkMatch function 
       // while the animations are executing
       clickBlock.style.visibility = "visible"
-      setTimeout(checkMatch, 1000)
+      // setTimeout(checkMatch, CHECKDELAY)
+      checkMatch()
     }
   }
 }
@@ -181,26 +183,30 @@ function play(card) {
 function checkMatch() {
   if (firstCard && secondCard) {
     if (firstCard.value === secondCard.value) {
-      firstCard.element.classList.remove("flipped")
-      firstCard.element.classList.add("matched")
-      secondCard.element.classList.remove("flipped")
-      secondCard.element.classList.add("matched")
       remainingPairs--
-      if (remainingPairs === 0) {
+      setTimeout(() => {
+        firstCard.element.classList.remove("flipped")
+        firstCard.element.classList.add("matched")
+        secondCard.element.classList.remove("flipped")
+        secondCard.element.classList.add("matched")
+        if (remainingPairs === 0) {
+          pairElement.innerText = remainingPairs
+          clickBlock.style.visibility = "hidden"
+          document.querySelector("body").innerHTML += '<button type="button" onclick="location.reload()">Play Again!</button>'
+        }
         pairElement.innerText = remainingPairs
-        clickBlock.style.visibility = "hidden"
-        document.querySelector("body").innerHTML += '<button type="button" onclick="location.reload()">Play Again!</button>'
-      }
-      pairElement.innerText = remainingPairs
+      }, CHECKDELAY)
     }
-    firstCard = null
-    secondCard = null
     setTimeout(() => {
-      document.querySelectorAll(".flipped").forEach((flipped) => {
-        unflipCard(flipped)
-      })
-      clickBlock.style.visibility = "hidden"
-    }, 500)
+      firstCard = null
+      secondCard = null
+      setTimeout(() => {
+        document.querySelectorAll(".flipped").forEach((flipped) => {
+          unflipCard(flipped)
+        })
+        clickBlock.style.visibility = "hidden"
+      }, FLIPDELAY)
+    }, CHECKDELAY)
   }
 }
 
@@ -209,7 +215,7 @@ function flipCard(card) {
   card.classList.add("flipped")
   setTimeout(() => {
     card.innerHTML = `<img src="./img/${board[card.getAttribute("id")].value}.png" width="80" />`
-  }, 500)
+  }, FLIPDELAY)
   card.classList.remove("unflip")
 }
 
@@ -218,7 +224,7 @@ function unflipCard(card) {
   card.classList.remove("flipped")
   setTimeout(() => {
     card.innerHTML = "&nbsp;"
-  }, 500)
+  }, FLIPDELAY)
   card.classList.add("unflip")
 }
 
