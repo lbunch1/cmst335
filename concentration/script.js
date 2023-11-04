@@ -95,7 +95,7 @@ function createBoard(num) {
 
   // A for loop that randomizes the placement of the cards on the board array
   for (let i = 0; i < cardCount; i++) {
-    let splicer = Math.floor(Math.random() * (cards.length - 1))
+    let splicer = Math.floor(Math.random() * (cards.length))
     board.push(cards.splice(splicer, 1)[0])
   }
 
