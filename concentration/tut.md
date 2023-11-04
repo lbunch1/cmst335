@@ -101,7 +101,7 @@ While this populates our board array, and our board array will indeed be the sam
 
 We need to delete the items in the cards array as we pull them out. It seems like there should be a `cards.delete(index)` function. But to my knowledge that doesn't exist. Instead we have a method called `.splice()`. `.splice()` takes two arguments, the first being the index of the first value you want to remove from an array, and the second being the number of consecutive items you would like to remove from the array. Since we only want to remove one at a time, we will use the index and `1` as our arguments. Where the index of course is the random number function we used earlier. Brilliantly, the `.splice()` method returns the value we are removing from our array. So we can wrap the whole thing in a our `board.push()`.
 
-> **EDIT:** It just occurred to me that there is a `delete` operator in JavaScript can can delete individual values in an array, but the `splice()` method is still superior because it returns the removed value, and the `delete` operator will leave an empty value in the array, preserving the length of the initial array.
+> **EDIT:** It just occurred to me that there is a `delete` operator in JavaScript that can delete individual values in an array, but the `splice()` method is still superior because it returns the removed value, and the `delete` operator will leave an empty value in the array, preserving the length of the initial array.
 
 ```javascript
 for ( let i = 1 ; i < cards.length ; i++ ) {
