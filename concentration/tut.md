@@ -18,7 +18,7 @@ The game "Concentration" involves a series of "cards" that are face down on a bo
 
 While the immediate challenge is to find each matching pair, an additional element of difficulty should be added to the game. If the user has infinite opportunity to find the matching pairs, the game will not be very fun.
 
-We can choose to excecute the additional challenge in a number of ways:
+We can choose to execute the additional challenge in a number of ways:
 
 - A timer (this is the method I chose)
 - A limit to the number of incorrect guesses the user has
@@ -26,9 +26,11 @@ We can choose to excecute the additional challenge in a number of ways:
 
 You may be able to come up with additional elements as well
 
-## Excecution
+## Execution
 
 So how do we start? The first thing I always do is set up my scaffolding for the site.
+
+### Scaffolding
 
 I make a new directory for my project, then add the following files: index.html, script.js, and style.css.
 
@@ -57,9 +59,11 @@ We can leave the style.css blank for now. Hop into the script.js
 console.log("Hello, from script.js")
 ```
 
-Serve the directory to your browser using your preffered method and check the console. You should see the message in the console ensuring that the connection between the files is working.
+Serve the directory to your browser using your preferred method and check the console. You should see the message in the console ensuring that the connection between the files is working.
 
 So let's work on the code for the game now.
+
+### Randomizing Arrays
 
 Lets start with a simple array, just so we can wrap our heads around what we are doing here 
 
@@ -73,9 +77,54 @@ Simple, now we just need to shuffle these numbers. This is really the core of th
 
 We need to remove items from the first array and put them into a new array in a random order.
 
-So we know we will need to incorporate `Math.random()`. We will want our random number to correlate with an index within our first array
+So we know we will need to incorporate `Math.random()`. We will want our random number to correlate with an index within our first array, so we can use the length of the array as the multiplier for the random number:
 
 ```JavaScript
-let cards = [1,1,2,2,3,3,4,4,5,5,6,6]
-
+Math.random() * 12
+// or even better
+Math.random() * cards.length
+// and then eliminate the decimals
+Math.floor( Math.random() * cards.length )
 ```
+
+So we'll just pull from our array using a for-loop 
+
+```JavaScript
+let board = []
+
+for ( let i = 1 ; i < cards.length ; i++ ) {
+  board.push( cards[Math.floor( Math.random() * cards )] )
+}
+```
+
+While this populates our board array, and our board array will indeed be the same length as our initial cards array, there is no guarantee that the board array will contain all the items in the cards array. Or to put it another way, the items of cards array are not depleting, they are being copied at random.
+
+We need to delete the items in the cards array as we pull them out. It seems like there should be a `cards.delete(index)` function. But to my knowledge that doesn't exist. Instead we have a method called `.splice()`. `.splice()` takes two arguments, the first being the index of the first value you want to remove from an array, and the second being the number of consecutive items you would like to remove from the array. Since we only want to remove one at a time, we will use the index and `1` as our arguments. Where the index of course is the random number function we used earlier. Brilliantly, the `.splice()` method returns the value we are removing from our array. So we can wrap the whole thing in a our `board.push()`.
+
+```JavaScript
+for ( let i = 1 ; i < cards.length ; i++ ) {
+  board.push( cards.splice( Math.floor(Math.random() * cards.length )))
+}
+// PRO TIP: console.table() will show the output of an array in a much prettier format.
+console.table(board)
+```
+
+Somethings wrong though. Only half of the cards have transferred to the board. We are recalculating the length of the cards array for each iteration, so the loop is terminates half way through our intended operation. Easy fix, just throw the length in a variable right before the for-loop
+
+```JavaScript
+let cardsLength = cards.length
+
+for ( let i = 1 ; i < cardsLength ; i++ ) {
+  board.push( cards.splice( Math.floor(Math.random() * cards.length )))
+}
+
+console.table(board)
+```
+
+And there you have it. A shuffled board.
+
+Now we just need to generate some DOM elements based on this array.
+
+### DOM Elements
+
+### Game Loop
