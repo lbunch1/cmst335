@@ -55,7 +55,7 @@ I make a new directory for my project, then add the following files: index.html,
 
 We can leave the style.css blank for now. Hop into the script.js
 
-```JavaScript
+```javascript
 console.log("Hello, from script.js")
 ```
 
@@ -67,7 +67,7 @@ So let's work on the code for the game now.
 
 Lets start with a simple array, just so we can wrap our heads around what we are doing here 
 
-```JavaScript
+```javascript
 let cards = [1,1,2,2,3,3,4,4,5,5,6,6]
 
 console.log(cards)
@@ -79,7 +79,7 @@ We need to remove items from the first array and put them into a new array in a 
 
 So we know we will need to incorporate `Math.random()`. We will want our random number to correlate with an index within our first array, so we can use the length of the array as the multiplier for the random number:
 
-```JavaScript
+```javascript
 Math.random() * 12
 // or even better
 Math.random() * cards.length
@@ -89,7 +89,7 @@ Math.floor( Math.random() * cards.length )
 
 So we'll just pull from our array using a for-loop 
 
-```JavaScript
+```javascript
 let board = []
 
 for ( let i = 1 ; i < cards.length ; i++ ) {
@@ -101,7 +101,7 @@ While this populates our board array, and our board array will indeed be the sam
 
 We need to delete the items in the cards array as we pull them out. It seems like there should be a `cards.delete(index)` function. But to my knowledge that doesn't exist. Instead we have a method called `.splice()`. `.splice()` takes two arguments, the first being the index of the first value you want to remove from an array, and the second being the number of consecutive items you would like to remove from the array. Since we only want to remove one at a time, we will use the index and `1` as our arguments. Where the index of course is the random number function we used earlier. Brilliantly, the `.splice()` method returns the value we are removing from our array. So we can wrap the whole thing in a our `board.push()`.
 
-```JavaScript
+```javascript
 for ( let i = 1 ; i < cards.length ; i++ ) {
   board.push( cards.splice( Math.floor(Math.random() * cards.length )))
 }
@@ -111,7 +111,7 @@ console.table(board)
 
 Somethings wrong though. Only half of the cards have transferred to the board. We are recalculating the length of the cards array for each iteration, so the loop is terminates half way through our intended operation. Easy fix, just throw the length in a variable right before the for-loop
 
-```JavaScript
+```javascript
 let cardsLength = cards.length
 
 for ( let i = 1 ; i < cardsLength ; i++ ) {
@@ -127,4 +127,96 @@ Now we just need to generate some DOM elements based on this array.
 
 ### DOM Elements
 
+*Explanation needed*
+
+```javascript
+// get gameboard DOM element
+const gameBoard = document.getElementById("game-board")
+
+// add a blank card for each array element in "board"
+board.forEach((card,i)=>{
+  let newCard = document.createElement("div")
+  newCard.classList.add("card")
+  newCard.setAttribute("id", i)
+  newCard.innerText = "0"
+  newCard.addEventListener("click", play) // we will create the play function below
+  gameBoard.appendChild(newCard)
+}
+```
+
+You'll need to add a `game-board` div in the body of your index.html
+
+```html
+<body>
+
+  <div id="game-board"></div>
+
+</body>
+```
+
+And then some basic styling in the style.css
+
+```css
+#game-board {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 70vw;
+  margin: auto;
+  gap: 2rem;
+}
+
+.card {
+  border: 2px solid black;
+  border-radius: 12px;
+  padding: 4rem;
+}
+
+.flipped {
+  background-color: darkgray;
+  color: white;
+}
+```
+
 ### Game Loop
+
+Now we have our cards, and each card has an event listener that calls a `play` function that we've yet to write.
+
+#### Flipping Cards
+
+To flip the card, we just need to add to the class list to give the user a visual queue, and then swap out the inner text with the hidden value. Let's start with the class
+
+```javascript
+function play() {
+  this.classList.add("flipped")
+}
+```
+
+But now we need to make sure the card isn't already flipped
+
+```javascript
+function play() {
+  if (this.classList.contains("flipped")) {
+    this.classList.remove("flipped")
+  } else {
+    this.classList.add("flipped")
+  }
+}
+```
+
+Then for the inner text we can just add a line to each segment. To find the value of the card, we can use the id attribute of the DOM element to reference the index of the `board` array.
+
+```javascript
+function play() {
+  if (this.classList.contains("flipped")) {
+    this.classList.remove("flipped")
+    this.innerText = "0"
+  } else {
+    this.classList.add("flipped")
+    this.innerText = board[this.getAttribute("id")]
+  }
+}
+```
+
+You should now be able to flip all the cards.
+
+From here you need to figure out how to check that only 2 cards are flipped at a time, then further, you need to figure out how to check if the 2 flipped cards match or not.
